@@ -1,5 +1,7 @@
 package ku.cs.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.util.Callback;
 import ku.cs.CustomListView;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class AdminPageController {
     @FXML
@@ -21,7 +24,8 @@ public class AdminPageController {
 
     public void initialize() {
         ObservableList<CustomListView.CustomThing> data = FXCollections.observableArrayList();
-        data.addAll(new CustomListView.CustomThing("Cheese", 123), new CustomListView.CustomThing("Horse", 456), new CustomListView.CustomThing("Jam", 789));
+
+        data.addAll(new CustomListView.CustomThing(LocalDateTime.now(), "userName"));
 
         final ListView<CustomListView.CustomThing> listView = new ListView<CustomListView.CustomThing>(data);
         listView.setCellFactory(new Callback<ListView<CustomListView.CustomThing>, ListCell<CustomListView.CustomThing>>() {
@@ -30,6 +34,15 @@ public class AdminPageController {
                 return new CustomListView.CustomListCell();
             }
         });
+
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<CustomListView.CustomThing>() {
+                    @Override
+                    public void changed(ObservableValue<? extends CustomListView.CustomThing> observableValue, CustomListView.CustomThing customThing, CustomListView.CustomThing t1) {
+
+                    }
+                }
+        );
 
         mainSplitPane.getItems().addAll(listView, new AnchorPane());
         mainSplitPane.setDividerPosition(0, 0.25);

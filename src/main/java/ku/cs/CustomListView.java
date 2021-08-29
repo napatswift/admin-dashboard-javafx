@@ -1,55 +1,58 @@
 package ku.cs;
 
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CustomListView {
     public static class CustomThing {
-        private String name;
-        private int price;
-        public String getName() {
-            return name;
+        private String string;
+        private LocalDateTime time;
+
+        public String getString() {
+            return string;
         }
-        public int getPrice() {
-            return price;
+
+        public LocalDateTime getTime() {
+            return time;
         }
-        public CustomThing(String name, int price) {
-            super();
-            this.name = name;
-            this.price = price;
+
+        public String getTimeString(){
+            String pattern = " HH:mm - d MMM";
+            DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern(pattern);
+            return simpleDateFormat.format(time);
+        }
+
+        public CustomThing(LocalDateTime time, String string) {
+            this.string = string;
+            this.time = time;
         }
     }
 
     public static class CustomListCell extends ListCell<CustomThing> {
-        private HBox content;
-        private Text name;
-        private Text price;
+        private VBox content;
+        private Label topLabel;
+        private Label label;
 
         public CustomListCell() {
-            name = new Text();
-            price = new Text();
-            VBox vBox = new VBox(name, price);
-            content = new HBox(new Label("[Graphic]"), vBox);
-            content.setSpacing(10);
+            topLabel = new Label();
+            label = new Label();
+            topLabel.setStyle("-fx-font-size: 16");
+            label.setStyle("-fx-font-size: 24");
+            content = new VBox(topLabel, label);
         }
 
         @Override
         protected void updateItem(CustomThing item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null && !empty) { // <== test for null item and empty parameter
-                name.setText(item.getName());
-                price.setText(String.format("%d $", item.getPrice()));
+                topLabel.setText(item.getTimeString());
+                label.setText(item.getString());
                 setGraphic(content);
             } else {
                 setGraphic(null);
